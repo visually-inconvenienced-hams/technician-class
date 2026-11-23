@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <link rel="icon" href="data:," />
+    <script>try{var t=localStorage.getItem("technician-class-theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}</script>
     <title>Technician License Class</title>
     <style>
 :root {
@@ -17,6 +18,84 @@
   --panel: #0d0d0d;
   --border: #ffffff;
   --muted: #cccccc;
+  --on-focus: #000000;
+  --on-good: #000000;
+  --on-fair: #000000;
+  --input-bg: #111111;
+  --panel-hover: #1f1f1f;
+  --good-hover: #66ff66;
+  --reading-bg: #1a1a1a;
+  --correct-bg: #003300;
+  --wrong-bg: #330000;
+  --hairline: #444444;
+}
+/* Light mode follows the device setting, unless the toggle has set
+ * a choice. The bright-on-black palette stays the default. */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #ffffff;
+    --text: #000000;
+    --good: #007a00;
+    --fair: #7a5200;
+    --poor: #b00000;
+    --focus: #005fcc;
+    --panel: #f5f5f5;
+    --border: #000000;
+    --muted: #555555;
+    --on-focus: #ffffff;
+    --on-good: #ffffff;
+    --on-fair: #ffffff;
+    --input-bg: #ffffff;
+    --panel-hover: #e0e0e0;
+    --good-hover: #005a00;
+    --reading-bg: #e6f0ff;
+    --correct-bg: #d9f2d9;
+    --wrong-bg: #f8d7d7;
+    --hairline: #888888;
+  }
+}
+/* A choice from the toggle beats the device setting either way. */
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --text: #ffffff;
+  --good: #00ff00;
+  --fair: #ffb300;
+  --poor: #ff6666;
+  --focus: #ffff00;
+  --panel: #0d0d0d;
+  --border: #ffffff;
+  --muted: #cccccc;
+  --on-focus: #000000;
+  --on-good: #000000;
+  --on-fair: #000000;
+  --input-bg: #111111;
+  --panel-hover: #1f1f1f;
+  --good-hover: #66ff66;
+  --reading-bg: #1a1a1a;
+  --correct-bg: #003300;
+  --wrong-bg: #330000;
+  --hairline: #444444;
+}
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #000000;
+  --good: #007a00;
+  --fair: #7a5200;
+  --poor: #b00000;
+  --focus: #005fcc;
+  --panel: #f5f5f5;
+  --border: #000000;
+  --muted: #555555;
+  --on-focus: #ffffff;
+  --on-good: #ffffff;
+  --on-fair: #ffffff;
+  --input-bg: #ffffff;
+  --panel-hover: #e0e0e0;
+  --good-hover: #005a00;
+  --reading-bg: #e6f0ff;
+  --correct-bg: #d9f2d9;
+  --wrong-bg: #f8d7d7;
+  --hairline: #888888;
 }
 * { box-sizing: border-box; }
 html { font-size: 20px; scroll-padding-top: 10rem; }
@@ -44,7 +123,7 @@ body {
   left: -9999px;
   top: 0;
   background: var(--focus);
-  color: #000;
+  color: var(--on-focus);
   font-weight: bold;
   padding: 0.75rem 1rem;
   z-index: 10;
@@ -67,6 +146,20 @@ li { margin: 0.35rem 0; }
 
 .intro { font-size: 1.1rem; }
 
+.theme-toggle {
+  font: inherit;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text);
+  background: var(--bg);
+  border: 3px solid var(--border);
+  padding: 0.6rem 1rem;
+  min-height: 3rem;
+  cursor: pointer;
+}
+.theme-toggle:hover { background: var(--panel-hover); }
+.theme-note { font-size: 1.05rem; color: var(--muted); }
+
 .back-link {
   display: block;
   border: 3px solid var(--border);
@@ -80,7 +173,7 @@ li { margin: 0.35rem 0; }
   margin: 1rem 0 0.5rem;
   min-height: 3.5rem;
 }
-.back-link:hover { background: #1f1f1f; }
+.back-link:hover { background: var(--panel-hover); }
 button.back-link {
   font: inherit;
   cursor: pointer;
@@ -120,14 +213,14 @@ button.back-link {
   border: 3px solid var(--border);
   cursor: pointer;
 }
-.listen-controls .listen-row button:hover { background: #1f1f1f; }
+.listen-controls .listen-row button:hover { background: var(--panel-hover); }
 .listen-controls .listen-row button[disabled] { opacity: 0.5; cursor: default; }
 .listen-controls .listen-row label { font-size: 1.1rem; font-weight: bold; }
 .listen-controls .listen-row select {
   font: inherit;
   font-size: 1.1rem;
   color: var(--text);
-  background: var(--bg);
+  background: var(--input-bg);
   border: 3px solid var(--border);
   padding: 0.5rem;
   min-height: 3rem;
@@ -148,12 +241,12 @@ button.listen-btn {
   font: inherit;
   font-size: 1.35rem;
   font-weight: bold;
-  color: #000;
+  color: var(--on-good);
   background: var(--good);
   border: 3px solid var(--good);
   cursor: pointer;
 }
-button.listen-btn:hover { background: #66ff66; }
+button.listen-btn:hover { background: var(--good-hover); }
 button.listen-btn[disabled] { opacity: 0.5; cursor: default; }
 
 /* Visually hidden but announced by screen readers: the spoken form of
@@ -173,7 +266,7 @@ button.listen-btn[disabled] { opacity: 0.5; cursor: default; }
 .reading {
   outline: 3px solid var(--focus);
   outline-offset: 4px;
-  background: #1a1a1a;
+  background: var(--reading-bg);
 }
 
 #contents ol li { margin: 0.5rem 0; font-size: 1.15rem; }
@@ -215,10 +308,10 @@ figure.diagram img {
   border: 3px solid var(--border);
   cursor: pointer;
 }
-.quiz-option:hover { background: #1f1f1f; }
+.quiz-option:hover { background: var(--panel-hover); }
 .quiz-option[disabled] { cursor: default; }
-.quiz-option.chosen-correct { border-color: var(--good); background: #003300; }
-.quiz-option.chosen-wrong { border-color: var(--poor); background: #330000; }
+.quiz-option.chosen-correct { border-color: var(--good); background: var(--correct-bg); }
+.quiz-option.chosen-wrong { border-color: var(--poor); background: var(--wrong-bg); }
 .quiz-option.correct-answer { border-color: var(--good); }
 .opt-letter { font-weight: bold; }
 .quiz-feedback {
@@ -253,7 +346,7 @@ figure.diagram img {
   font-size: 1.05rem;
   color: var(--muted);
   margin-top: 2rem;
-  border-top: 1px solid #444;
+  border-top: 1px solid var(--hairline);
   padding-top: 1rem;
 }
     </style>
@@ -262,6 +355,8 @@ figure.diagram img {
     <a class="skip-link" href="#contents">Skip to the course contents</a>
     <header class="wrap">
       <h1>Technician License Class</h1>
+      <p><button type="button" class="theme-toggle" id="theme-toggle">Switch to light mode</button></p>
+      <p class="theme-note">Your light or dark choice is saved on this device only. It is never sent anywhere.</p>
       <p class="intro">This free course takes you from your first look at ham radio to your Technician exam. It has 27 lessons, and each one has a short quiz. Work through the lessons in order, from Lesson 1 to Lesson 27. Each lesson takes about 10 minutes to read or hear.</p>
       <p class="intro">Every lesson has a Listen button that reads it aloud with the voice built into your device. No audio files are used. The quizzes use real questions from the Technician exam pool. The real exam has 35 questions, and you need 26 right to pass.</p>
       <a class="back-link" href="https://www.facebook.com/groups/742838019382868">Back to Visually Inconvenienced Hams on Facebook</a>
@@ -4535,6 +4630,70 @@ figure.diagram img {
             window.location.href = fallbackUrl;
           }
         }, 1500);
+      });
+    }
+  }
+
+  // ---- Light and dark mode ---------------------------------------------------
+  // The page defaults to the bright-on-black palette. A device set to
+  // light mode gets the light palette automatically, and the toggle
+  // button lets anyone pick either way. The choice is remembered on
+  // this device only. Same pattern as the grid locator page.
+  function systemTheme() {
+    if (typeof window !== "undefined" && window.matchMedia
+      && window.matchMedia("(prefers-color-scheme: light)").matches) return "light";
+    return "dark";
+  }
+
+  function currentTheme() {
+    if (typeof document !== "undefined" && document.documentElement) {
+      var t = document.documentElement.getAttribute("data-theme");
+      if (t === "light" || t === "dark") return t;
+    }
+    return systemTheme();
+  }
+
+  function themeLabel(theme) {
+    return theme === "light" ? "Switch to dark mode" : "Switch to light mode";
+  }
+
+  function applyTheme(theme, remember) {
+    if (typeof document !== "undefined" && document.documentElement) {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+    var btn = document.getElementById("theme-toggle");
+    if (btn) btn.textContent = themeLabel(theme);
+    if (remember) {
+      try {
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("technician-class-theme", theme);
+        }
+      } catch (e) { /* private mode: the choice just is not remembered */ }
+    }
+  }
+
+  /* Theme toggle: label it for the theme in use, and follow the device
+   * if the user has never picked one. */
+  var themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) {
+    themeBtn.textContent = themeLabel(currentTheme());
+    themeBtn.addEventListener("click", function () {
+      applyTheme(currentTheme() === "light" ? "dark" : "light", true);
+    });
+  }
+  if (typeof window !== "undefined" && window.matchMedia) {
+    var lightQuery = window.matchMedia("(prefers-color-scheme: light)");
+    if (lightQuery.addEventListener) {
+      lightQuery.addEventListener("change", function () {
+        var stored = null;
+        try {
+          if (typeof localStorage !== "undefined") {
+            stored = localStorage.getItem("technician-class-theme");
+          }
+        } catch (e) { stored = null; }
+        if (stored !== "light" && stored !== "dark") {
+          applyTheme(lightQuery.matches ? "light" : "dark", false);
+        }
       });
     }
   }
