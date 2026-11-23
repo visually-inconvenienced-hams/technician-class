@@ -507,6 +507,152 @@ CSS = """
   --wrong-bg: #f8d7d7;
   --hairline: #888888;
 }
+/* Color presets: named foreground/background pairs, in the e-reader
+   tradition (Kindle, Nook). A preset sets the SAME variables the
+   theme sets, so the two never fight: the last choice wins. These
+   blocks come after the theme blocks and win ties, so a stored preset
+   beats the theme until the theme is picked again. Every pair passes
+   AAA (7 to 1 or better); the pairs differ in brightness as well as
+   hue, so they still differ for color-blind readers, and no pair is
+   red on green or green on red. */
+:root[data-colors="white-on-black"] {
+  --bg: #000000;
+  --text: #ffffff;
+  --good: #00ff00;
+  --fair: #ffb300;
+  --poor: #ff6666;
+  --focus: #ffff00;
+  --panel: #0d0d0d;
+  --border: #ffffff;
+  --muted: #cccccc;
+  --on-focus: #000000;
+  --on-good: #000000;
+  --on-fair: #000000;
+  --input-bg: #111111;
+  --panel-hover: #1f1f1f;
+  --good-hover: #66ff66;
+  --reading-bg: #1a1a1a;
+  --correct-bg: #003300;
+  --wrong-bg: #330000;
+  --hairline: #444444;
+}
+:root[data-colors="black-on-white"] {
+  --bg: #ffffff;
+  --text: #000000;
+  --good: #007a00;
+  --fair: #7a5200;
+  --poor: #b00000;
+  --focus: #005fcc;
+  --panel: #f5f5f5;
+  --border: #000000;
+  --muted: #555555;
+  --on-focus: #ffffff;
+  --on-good: #ffffff;
+  --on-fair: #ffffff;
+  --input-bg: #ffffff;
+  --panel-hover: #e0e0e0;
+  --good-hover: #005a00;
+  --reading-bg: #e6f0ff;
+  --correct-bg: #d9f2d9;
+  --wrong-bg: #f8d7d7;
+  --hairline: #888888;
+}
+:root[data-colors="yellow-on-black"] {
+  --bg: #000000;
+  --text: #ffff00;
+  --good: #00ff00;
+  --fair: #ffb300;
+  --poor: #ff6666;
+  --focus: #ffff00;
+  --panel: #0d0d0d;
+  --border: #ffffff;
+  --muted: #cccccc;
+  --on-focus: #000000;
+  --on-good: #000000;
+  --on-fair: #000000;
+  --input-bg: #111111;
+  --panel-hover: #1f1f1f;
+  --good-hover: #66ff66;
+  --reading-bg: #1a1a1a;
+  --correct-bg: #003300;
+  --wrong-bg: #330000;
+  --hairline: #444444;
+}
+:root[data-colors="black-on-pale-yellow"] {
+  --bg: #fff9c4;
+  --text: #000000;
+  --good: #005a00;
+  --fair: #5c3d00;
+  --poor: #8f0000;
+  --focus: #000000;
+  --panel: #ffe082;
+  --border: #000000;
+  --muted: #333333;
+  --on-focus: #ffffff;
+  --on-good: #ffffff;
+  --on-fair: #ffffff;
+  --input-bg: #ffffff;
+  --panel-hover: #ffd54f;
+  --good-hover: #004000;
+  --reading-bg: #e6f0ff;
+  --correct-bg: #d9f2d9;
+  --wrong-bg: #f8d7d7;
+  --hairline: #888888;
+}
+:root[data-colors="black-on-sepia"] {
+  --bg: #f4ecd8;
+  --text: #000000;
+  --good: #005a00;
+  --fair: #5c3d00;
+  --poor: #8f0000;
+  --focus: #000000;
+  --panel: #e8dcc0;
+  --border: #000000;
+  --muted: #333333;
+  --on-focus: #ffffff;
+  --on-good: #ffffff;
+  --on-fair: #ffffff;
+  --input-bg: #ffffff;
+  --panel-hover: #dccfa8;
+  --good-hover: #004000;
+  --reading-bg: #e6f0ff;
+  --correct-bg: #d9f2d9;
+  --wrong-bg: #f8d7d7;
+  --hairline: #767676;
+}
+:root[data-colors="white-on-dark-blue"] {
+  --bg: #000080;
+  --text: #ffffff;
+  --good: #00ff00;
+  --fair: #ffb300;
+  --poor: #ffaaaa;
+  --focus: #ffff00;
+  --panel: #0000a0;
+  --border: #ffffff;
+  --muted: #cccccc;
+  --on-focus: #000000;
+  --on-good: #000000;
+  --on-fair: #000000;
+  --input-bg: #000060;
+  --panel-hover: #0000c0;
+  --good-hover: #66ff66;
+  --reading-bg: #0000a0;
+  --correct-bg: #003300;
+  --wrong-bg: #330000;
+  --hairline: #888888;
+}
+/* Font family and font style, from the accessibility panel. System
+   font stacks only: nothing is downloaded. Sans-serif is the page
+   default, so it needs no rule. */
+:root[data-font="serif"] body {
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+:root[data-font="mono"] body {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Courier New", monospace;
+}
+:root[data-font-attr="bold"] body { font-weight: bold; }
+:root[data-font-attr="italic"] body { font-style: italic; }
+:root[data-font-attr="bold-italic"] body { font-weight: bold; font-style: italic; }
 * { box-sizing: border-box; }
 /* The root size is in rem so it follows the reader's own browser text
    size: 1.25rem is 20px at the usual 16px browser default. The
@@ -563,19 +709,121 @@ li { margin: 0.35rem 0; }
 
 .intro { font-size: 1.1rem; }
 
-.theme-toggle {
+/* Accessibility button and panel. One button at the top of the page
+   opens the display settings; the panel holds them as native form
+   controls. The button follows the group button standard: a
+   well-understood symbol above a short label, in high-contrast colors
+   that are the same on all five pages and in both themes. The "aA"
+   symbol is text, not an image, so it grows with the text size. Bold
+   black text on gold passes AAA (15.0 to 1); the black border keeps
+   the button distinct from a light page behind it. */
+.acc-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  min-width: 0;
+  min-height: 4.5rem;
+  padding: 0.5rem 0.9rem;
   font: inherit;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: bold;
-  color: var(--text);
-  background: var(--bg);
-  border: 3px solid var(--border);
-  padding: 0.6rem 1rem;
-  min-height: 3rem;
+  color: #000000;
+  background: #ffd700;
+  border: 3px solid #000000;
   cursor: pointer;
 }
-.theme-toggle:hover { background: var(--panel-hover); }
-.theme-toggle[disabled] { opacity: 0.5; cursor: default; }
+.acc-btn:hover { background: #e6c200; }
+.acc-btn:focus-visible {
+  outline: 4px solid #000000;
+  box-shadow: 0 0 0 7px #ffffff;
+  outline-offset: 2px;
+}
+.acc-btn .aa-symbol { display: block; line-height: 1; }
+.acc-btn .aa-small { font-size: 0.75em; font-weight: bold; }
+.acc-btn .aa-big { font-size: 1.5em; font-weight: bold; }
+.acc-btn .acc-label { display: block; line-height: 1.2; text-align: center; min-width: 0; overflow-wrap: anywhere; }
+.acc-panel {
+  border: 3px solid var(--border);
+  background: var(--panel);
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0;
+  /* Long words break anywhere, so the panel never forces horizontal
+     scrolling at a narrow viewport with large text (WCAG 1.4.10). */
+  overflow-wrap: anywhere;
+}
+.acc-panel h2 { margin-top: 0; }
+.acc-panel fieldset {
+  border: 2px solid var(--border);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  /* A fieldset's default smallest width is its content's width, which
+     would push the page wider than the screen at large text sizes. */
+  min-width: 0;
+}
+.acc-panel legend { font-weight: bold; font-size: 1.15rem; padding: 0 0.5rem; }
+.acc-panel label { display: block; padding: 0.4rem 0; font-size: 1.15rem; cursor: pointer; }
+.acc-panel input[type="radio"] {
+  width: 1.4em;
+  height: 1.4em;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  accent-color: var(--focus);
+}
+.acc-hint { font-size: 1.05rem; color: var(--muted); margin: 0.25rem 0 0.5rem; }
+.acc-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
+.acc-size-btn {
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #000000;
+  background: #ffd700;
+  border: 3px solid #000000;
+  padding: 0.5rem 0.9rem;
+  min-height: 3rem;
+  min-width: 0;
+  cursor: pointer;
+}
+.acc-size-btn:hover { background: #e6c200; }
+.acc-size-btn:focus-visible {
+  outline: 4px solid #000000;
+  box-shadow: 0 0 0 7px #ffffff;
+  outline-offset: 2px;
+}
+.acc-size-btn:disabled { opacity: 0.55; cursor: default; }
+.acc-size-btn:disabled:hover { background: #ffd700; }
+.acc-readout { font-size: 1.15rem; font-weight: bold; margin: 0.5rem 0; }
+/* Color preset buttons wear their own pair, so each one previews what
+   it does. The name always carries the meaning; the color is only a
+   second cue. The border is the button's own foreground color, so on
+   any page background either the fill or the border stands out. The
+   pressed preset shows a check mark as well as its pressed state, so
+   the choice is visible without relying on color. */
+.acc-preset {
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: bold;
+  padding: 0.6rem 0.9rem;
+  min-height: 3rem;
+  min-width: 0;
+  border: 3px solid currentColor;
+  cursor: pointer;
+}
+.acc-preset:focus-visible {
+  outline: 4px solid #000000;
+  box-shadow: 0 0 0 7px #ffffff;
+  outline-offset: 2px;
+}
+.acc-preset .acc-check { display: none; }
+.acc-preset[aria-pressed="true"] .acc-check { display: inline; }
+.acc-preset .acc-check svg { width: 1em; height: 1em; vertical-align: middle; margin-right: 0.25em; }
+.acc-preset[data-colors="white-on-black"] { background: #000000; color: #ffffff; }
+.acc-preset[data-colors="black-on-white"] { background: #ffffff; color: #000000; }
+.acc-preset[data-colors="yellow-on-black"] { background: #000000; color: #ffff00; }
+.acc-preset[data-colors="black-on-pale-yellow"] { background: #fff9c4; color: #000000; }
+.acc-preset[data-colors="black-on-sepia"] { background: #f4ecd8; color: #000000; }
+.acc-preset[data-colors="white-on-dark-blue"] { background: #000080; color: #ffffff; }
 .theme-note { font-size: 1.05rem; color: var(--muted); }
 
 .back-link {
@@ -1302,11 +1550,25 @@ JS = """
     }
   }
 
-  // ---- Light and dark mode ---------------------------------------------------
-  // The page defaults to the bright-on-black palette. A device set to
-  // light mode gets the light palette automatically, and the toggle
-  // button lets anyone pick either way. The choice is remembered on
-  // this device only. Same pattern as the grid locator page.
+  // ---- Accessibility settings ----------------------------------------------
+  // One button opens a panel with every display setting: light or dark,
+  // font family, text size, font style, and color presets. Every choice
+  // is remembered on this device only (localStorage), and the head
+  // script applies stored choices before first paint, so the page never
+  // flashes the wrong settings. Storage may be unavailable (private
+  // browsing), so every read and write is guarded and the page simply
+  // falls back to its defaults.
+  var THEME_KEY = "technician-class-theme";
+  var COLORS_KEY = "technician-class-colors";
+  var FONT_KEY = "technician-class-font";
+  var ATTR_KEY = "technician-class-font-attr";
+  var TEXT_SIZE_KEY = "technician-class-text-size";
+  var TEXT_SIZE_MIN = 16;
+  var TEXT_SIZE_MAX = 40;
+  var TEXT_SIZE_STEP = 4;
+  var TEXT_SIZE_DEFAULT = 20;
+  var LOW_VISION_SIZE = 32;
+
   function systemTheme() {
     if (typeof window !== "undefined" && window.matchMedia
       && window.matchMedia("(prefers-color-scheme: light)").matches) return "light";
@@ -1321,63 +1583,192 @@ JS = """
     return systemTheme();
   }
 
-  function themeLabel(theme) {
-    return theme === "light" ? "Switch to dark mode" : "Switch to light mode";
+  function readStored(key) {
+    try {
+      if (typeof localStorage !== "undefined") return localStorage.getItem(key);
+    } catch (e) { /* private mode: nothing was stored */ }
+    return null;
+  }
+  function store(key, value) {
+    try {
+      if (typeof localStorage !== "undefined") localStorage.setItem(key, value);
+    } catch (e) { /* private mode: the choice just is not remembered */ }
+  }
+  function clearStored(key) {
+    try {
+      if (typeof localStorage !== "undefined") localStorage.removeItem(key);
+    } catch (e) { /* private mode: nothing was stored */ }
   }
 
+  /* Theme and color presets both set the same foreground/background
+   * variables; the last choice wins. A preset beats the theme until
+   * the theme is picked again, which resets the colors to that
+   * theme's default pair. Picking a preset leaves the theme radio
+   * as it is. */
+  var PRESETS = ["white-on-black", "black-on-white", "yellow-on-black",
+    "black-on-pale-yellow", "black-on-sepia", "white-on-dark-blue"];
+  function defaultColors(theme) {
+    return theme === "light" ? "black-on-white" : "white-on-black";
+  }
+  function currentColors() {
+    if (typeof document !== "undefined" && document.documentElement) {
+      var c = document.documentElement.getAttribute("data-colors");
+      if (PRESETS.indexOf(c) !== -1) return c;
+    }
+    return defaultColors(currentTheme());
+  }
+  function checkRadio(name, value) {
+    var radios = document.querySelectorAll('input[name="' + name + '"]');
+    for (var i = 0; i < radios.length; i++) {
+      radios[i].checked = (radios[i].value === value);
+    }
+  }
+  function markPresetButtons(colors) {
+    var btns = document.querySelectorAll(".acc-preset");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].setAttribute("aria-pressed",
+        btns[i].getAttribute("data-colors") === colors ? "true" : "false");
+    }
+  }
+  function applyColors(colors, remember) {
+    if (typeof document !== "undefined" && document.documentElement) {
+      document.documentElement.setAttribute("data-colors", colors);
+    }
+    markPresetButtons(colors);
+    if (remember) store(COLORS_KEY, colors);
+  }
   function applyTheme(theme, remember) {
     if (typeof document !== "undefined" && document.documentElement) {
       document.documentElement.setAttribute("data-theme", theme);
     }
-    var btn = document.getElementById("theme-toggle");
-    if (btn) btn.textContent = themeLabel(theme);
-    if (remember) {
-      try {
-        if (typeof localStorage !== "undefined") {
-          localStorage.setItem("technician-class-theme", theme);
-        }
-      } catch (e) { /* private mode: the choice just is not remembered */ }
+    checkRadio("acc-theme", theme);
+    /* Picking a theme resets the colors to that theme's default pair. */
+    applyColors(defaultColors(theme), false);
+    clearStored(COLORS_KEY);
+    if (remember) store(THEME_KEY, theme);
+  }
+  function applyFont(font, remember) {
+    if (typeof document !== "undefined" && document.documentElement) {
+      if (font === "sans") document.documentElement.removeAttribute("data-font");
+      else document.documentElement.setAttribute("data-font", font);
     }
+    checkRadio("acc-font", font);
+    if (remember) store(FONT_KEY, font);
+  }
+  function applyFontAttr(attr, remember) {
+    if (typeof document !== "undefined" && document.documentElement) {
+      if (attr === "regular") document.documentElement.removeAttribute("data-font-attr");
+      else document.documentElement.setAttribute("data-font-attr", attr);
+    }
+    checkRadio("acc-attr", attr);
+    if (remember) store(ATTR_KEY, attr);
   }
 
-  /* Theme toggle: label it for the theme in use, and follow the device
-   * if the user has never picked one. */
-  var themeBtn = document.getElementById("theme-toggle");
-  if (themeBtn) {
-    themeBtn.textContent = themeLabel(currentTheme());
-    themeBtn.addEventListener("click", function () {
-      applyTheme(currentTheme() === "light" ? "dark" : "light", true);
+  /* The panel is a disclosure: the button says whether it is open, and
+   * the panel's content is only in the tab order while it is open. */
+  var accBtn = document.getElementById("accessibility-toggle");
+  var accPanel = document.getElementById("accessibility-panel");
+  if (accBtn && accPanel) {
+    accBtn.addEventListener("click", function () {
+      if (accPanel.hasAttribute("hidden")) {
+        accPanel.removeAttribute("hidden");
+        accBtn.setAttribute("aria-expanded", "true");
+      } else {
+        accPanel.setAttribute("hidden", "");
+        accBtn.setAttribute("aria-expanded", "false");
+      }
     });
   }
+
+  /* Radio groups: one listener each, on the change event, so keyboard
+   * users (arrow keys move within a group) and pointer users share
+   * one path. */
+  function wireRadios(name, apply) {
+    var radios = document.querySelectorAll('input[name="' + name + '"]');
+    for (var i = 0; i < radios.length; i++) {
+      radios[i].addEventListener("change", function () {
+        if (this.checked) apply(this.value, true);
+      });
+    }
+  }
+  wireRadios("acc-theme", applyTheme);
+  wireRadios("acc-font", applyFont);
+  wireRadios("acc-attr", applyFontAttr);
+
+  /* Color presets: each button applies its pair and leaves the theme
+   * radio as it is. */
+  (function wirePresets() {
+    var btns = document.querySelectorAll(".acc-preset");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function () {
+        applyColors(this.getAttribute("data-colors"), true);
+      });
+    }
+  })();
+
+  /* One-tap Low Vision setup: yellow on black, bold letters, and text
+   * size 32 — or the size already in use if it is larger. It never
+   * shrinks the text. */
+  var lowVisionBtn = document.getElementById("low-vision-btn");
+  if (lowVisionBtn) {
+    lowVisionBtn.addEventListener("click", function () {
+      applyColors("yellow-on-black", true);
+      applyFontAttr("bold", true);
+      var size = Math.max(currentTextSize(), LOW_VISION_SIZE);
+      applyTextSize(size, true);
+    });
+  }
+
+  /* Follow the device theme if the user has never picked one. A stored
+   * color preset stays in force across a device change; only the theme
+   * radio follows the device. */
   if (typeof window !== "undefined" && window.matchMedia) {
     var lightQuery = window.matchMedia("(prefers-color-scheme: light)");
     if (lightQuery.addEventListener) {
       lightQuery.addEventListener("change", function () {
-        var stored = null;
-        try {
-          if (typeof localStorage !== "undefined") {
-            stored = localStorage.getItem("technician-class-theme");
+        if (readStored(THEME_KEY) !== "light" && readStored(THEME_KEY) !== "dark") {
+          var t = lightQuery.matches ? "light" : "dark";
+          if (typeof document !== "undefined" && document.documentElement) {
+            document.documentElement.setAttribute("data-theme", t);
           }
-        } catch (e) { stored = null; }
-        if (stored !== "light" && stored !== "dark") {
-          applyTheme(lightQuery.matches ? "light" : "dark", false);
+          checkRadio("acc-theme", t);
+          if (PRESETS.indexOf(readStored(COLORS_KEY)) === -1) {
+            applyColors(defaultColors(t), false);
+          }
         }
       });
     }
   }
+
+  /* Start-up: resolve every stored choice (or the default), and set
+   * the panel controls to match what is on screen. */
+  (function initSettings() {
+    var theme = readStored(THEME_KEY);
+    if (theme !== "light" && theme !== "dark") theme = systemTheme();
+    if (typeof document !== "undefined" && document.documentElement) {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+    checkRadio("acc-theme", theme);
+    var colors = readStored(COLORS_KEY);
+    if (PRESETS.indexOf(colors) === -1) colors = defaultColors(theme);
+    applyColors(colors, false);
+    var font = readStored(FONT_KEY);
+    if (font !== "serif" && font !== "mono") font = "sans";
+    applyFont(font, false);
+    var attr = readStored(ATTR_KEY);
+    if (attr !== "bold" && attr !== "italic" && attr !== "bold-italic") attr = "regular";
+    applyFontAttr(attr, false);
+    updateTextSizeButtons(currentTextSize());
+    announceTextSize(currentTextSize());
+  })();
 
   // ---- Text size ---------------------------------------------------------
   // Three buttons change the root font size in 4px steps, from 16px to
   // 40px (default 20px). Nearly all text on the page is sized in rem,
   // so it all follows the root size. The choice is remembered on this
   // device only, and the head script applies a stored size before
-  // first paint, so the page never flashes the wrong size.
-  var TEXT_SIZE_MIN = 16;
-  var TEXT_SIZE_MAX = 40;
-  var TEXT_SIZE_STEP = 4;
-  var TEXT_SIZE_DEFAULT = 20;
-  var TEXT_SIZE_KEY = "technician-class-text-size";
-
+  // first paint, so the page never flashes the wrong size. The size
+  // limits and the storage key live with the other settings above.
   function currentTextSize() {
     /* The head script already applied a stored size as an inline style,
      * so the inline style is the size in use; without one, the page is
@@ -1410,13 +1801,7 @@ JS = """
     }
     updateTextSizeButtons(size);
     announceTextSize(size);
-    if (remember) {
-      try {
-        if (typeof localStorage !== "undefined") {
-          localStorage.setItem(TEXT_SIZE_KEY, String(size));
-        }
-      } catch (e) { /* private mode: the choice just is not remembered */ }
-    }
+    if (remember) store(TEXT_SIZE_KEY, String(size));
   }
 
   function resetTextSize() {
@@ -1425,17 +1810,11 @@ JS = """
     if (typeof document !== "undefined" && document.documentElement) {
       document.documentElement.style.fontSize = "";
     }
-    try {
-      if (typeof localStorage !== "undefined") {
-        localStorage.removeItem(TEXT_SIZE_KEY);
-      }
-    } catch (e) { /* private mode: nothing was stored anyway */ }
+    clearStored(TEXT_SIZE_KEY);
     updateTextSizeButtons(TEXT_SIZE_DEFAULT);
     announceTextSize(TEXT_SIZE_DEFAULT);
   }
 
-  /* Text-size buttons: mark the disabled end for the size in use. */
-  updateTextSizeButtons(currentTextSize());
   var smallerBtn = document.getElementById("text-smaller");
   if (smallerBtn) {
     smallerBtn.addEventListener("click", function () {
@@ -1482,6 +1861,19 @@ ABOUT = (
 )
 
 ORDINALS = ["first", "second", "third"]
+
+# Color presets for the accessibility panel: (data-colors value, label).
+# The values match the :root[data-colors="..."] blocks in CSS, and the
+# labels are the names members see. Every pair passes AAA (7 to 1 or
+# better); see the CSS comment for the ratios.
+PRESET_BUTTONS = [
+    ("white-on-black", "White on black"),
+    ("black-on-white", "Black on white"),
+    ("yellow-on-black", "Yellow on black"),
+    ("black-on-pale-yellow", "Black on pale yellow"),
+    ("black-on-sepia", "Black on sepia"),
+    ("white-on-dark-blue", "White on dark blue"),
+]
 
 
 def render_block(block, section_name):
@@ -1904,6 +2296,15 @@ SOFTWARE_LINKS = [
     "https://play.google.com/store/apps/details?id=org.dudetronics.droidstar",
     "https://www.allstarlink.org",
     "https://www.pa7lim.nl/peanut/",
+    # Radio Programming Software Options subsection (added 2026-11-23).
+    "https://www.chirpmyradio.com/projects/chirp/wiki/Download",
+    "https://www.rtsystemsinc.com",
+    "https://www.opengd77.com/downloads/",
+    "https://www.dropbox.com/sh/490e5c4zyzbiwi5/AAAptUM0XBhbWaJUKNY1GQapa?dl=1",
+    "http://lists.porkcast.net/listinfo.cgi/blind-gd77-porkcast.net",
+    "https://blindhams.wordpress.com/ham-radio-links/",
+    "https://openrtx.org",
+    "https://github.com/OpenRTX/OpenRTX/releases",
 ]
 # Digital voice networks (D-STAR/DMR/Fusion/M17) — a separate heading inside
 # the section, since these are different networks from EchoLink/AllStarLink.
@@ -1919,11 +2320,176 @@ SOFTWARE_DIGITAL_VOICE = [
         ", and a license.",
     ),
 ]
+# Radio programming software (CHIRP, RT Systems, and the programs for
+# the accessible firmware radios) — a subsection inside "Get the
+# software", added 2026-11-23 at Gregory's pick of the class software
+# area as its home. Text from
+# Radio-Programming-Software-Options-DRAFT.txt in the library goal.
+# Links were verified 2026-11-23, except the Accessible GD77 mailing
+# list, which did not load when checked (the draft says so, and the
+# caveat stays). The OpenRTX note is flagged TO CONFIRM in the draft
+# and stays flagged here until Gregory confirms it.
+PROGRAMMING_INTRO = (
+    "To put channels into a radio from a computer, you need a programming "
+    "program. The program depends on the radio. Most radios use CHIRP or "
+    "RT Systems. Radios that run accessible firmware do not use CHIRP or "
+    "RT Systems. Each of those uses its own program, or the radio maker's "
+    "program, as listed below."
+)
+# (heading, prose, links). Links use the same tuple shape as the
+# EchoLink/AllStarLink items: (text before, link text, URL, text
+# after). The Sources entry has no links: it names its sources in
+# plain words, per the draft.
+PROGRAMMING_ENTRIES = [
+    (
+        "CHIRP (CHIRP-next)",
+        (
+            "CHIRP is free and open source. It runs on Windows, Mac, and "
+            "Linux. It programs hundreds of radio models from many makers. "
+            "It can read a channel list from a CSV file, which is how the "
+            "VIH frequency files are built to work with it. Get it only "
+            "from the official site, because other sites may carry old or "
+            "changed copies."
+        ),
+        [
+            (
+                "",
+                "CHIRP download page",
+                "https://www.chirpmyradio.com/projects/chirp/wiki/Download",
+                "",
+            ),
+        ],
+    ),
+    (
+        "RT Systems",
+        (
+            "RT Systems sells one programming program for each radio model. "
+            "You buy the program made for your exact radio. It runs on "
+            "Windows or Mac, depending on the radio. It also sells the "
+            "programming cable for each radio. JAWS scripts for RT Systems "
+            "programs are listed on the blind hams links page below. RT "
+            "Systems is a paid program, not free."
+        ),
+        [
+            (
+                "",
+                "RT Systems website",
+                "https://www.rtsystemsinc.com",
+                "",
+            ),
+        ],
+    ),
+    (
+        "OpenGD77 CPS",
+        (
+            "OpenGD77 is free firmware with voice prompts, made by Roger "
+            "Clark, VK3KYY, with help from Daniel, F1RMB, and others. It "
+            "runs on the Radioddity GD-77 and GD-77S, the Baofeng DM-1801 "
+            "and RD-5R, the TYT MD-UV380 and Retevis RT-3S, the Baofeng "
+            "DM-1701 and Retevis RT-84, the TYT MD-9600 and Retevis RT-90, "
+            "and the TYT MD2017 and Retevis RT-82. The OpenGD77 CPS is the "
+            "programming program for these radios. Do not use CHIRP or RT "
+            "Systems on a radio that runs OpenGD77. The OpenGD77 forum "
+            "closed in 2026, and the community forum moved to opengd77.org. "
+            "Downloads still work at the address below."
+        ),
+        [
+            (
+                "",
+                "OpenGD77 downloads page",
+                "https://www.opengd77.com/downloads/",
+                "",
+            ),
+        ],
+    ),
+    (
+        "Accessible GD77",
+        (
+            "Accessible GD77 is Joe Stephen's, VK7JS, accessible build of "
+            "OpenGD77, made for blind operators. It comes in a stable "
+            "version and a beta test version. The stable version is the one "
+            "most people want. The beta version is for testing new work. "
+            "There is a mailing list for news about Accessible GD77. The "
+            "mailing list link below did not load when checked on "
+            "2026-11-23, so it may have moved."
+        ),
+        [
+            (
+                "Stable version: ",
+                "Accessible GD77 stable version",
+                "https://www.dropbox.com/sh/490e5c4zyzbiwi5/AAAptUM0XBhbWaJUKNY1GQapa?dl=1",
+                "",
+            ),
+            (
+                "Mailing list: ",
+                "Accessible GD77 mailing list",
+                "http://lists.porkcast.net/listinfo.cgi/blind-gd77-porkcast.net",
+                "",
+            ),
+            (
+                "",
+                "Blind hams links page",
+                "https://blindhams.wordpress.com/ham-radio-links/",
+                ", which lists the stable and beta versions and more.",
+            ),
+        ],
+    ),
+    (
+        "OpenRTX",
+        (
+            "OpenRTX is free and open source firmware, started in March "
+            "2020 by Niccolo Izzo, IU2KIN, Silvano Seva, IU2KWO, Federico "
+            "Amedeo Izzo, IU2NUO, and Frederik Saraci, IU2NRO, in Italy. "
+            "It has voice prompts for vision impaired operators, added in "
+            "November 2022. It runs on the TYT MD-380 and MD-390, the TYT "
+            "MD-UV380 and MD-UV390, the Retevis RT3 and RT3S, the "
+            "Radioddity GD-77, the Baofeng DM-1801 and DM-1701, the "
+            "Connect Systems CS7000-M17 and CS7000-M17 Plus, and others. "
+            "It does FM and M17 digital voice. It does not do DMR. The "
+            "firmware is loaded with the radio maker's update tool, the "
+            "radio_tool program on Linux, or a web flasher. NOTE, TO "
+            "CONFIRM: a current reference says that channel lists, called "
+            "codeplugs, still need the radio maker's own software. OpenRTX "
+            "does not have its own channel programming program. Gregory, "
+            "please confirm this is right before this is published."
+        ),
+        [
+            (
+                "",
+                "OpenRTX website",
+                "https://openrtx.org",
+                "",
+            ),
+            (
+                "Releases: ",
+                "OpenRTX releases on GitHub",
+                "https://github.com/OpenRTX/OpenRTX/releases",
+                "",
+            ),
+        ],
+    ),
+    (
+        "Sources",
+        (
+            "CHIRP, from the CHIRP project at chirpmyradio.com. RT "
+            "Systems, from RT Systems, Inc. OpenGD77, from the OpenGD77 "
+            "project at opengd77.com. Accessible GD77, from Joe Stephen, "
+            "VK7JS, by way of the blind hams links page at "
+            "blindhams.wordpress.com. OpenRTX, from the OpenRTX project at "
+            "openrtx.org and github.com/OpenRTX/OpenRTX. The comparison of "
+            "the three firmware projects, and the note that OpenRTX "
+            "codeplugs still need the maker's software, from the reference "
+            "page by N6JET at n6jet.com/open-radio-firmware.html, last "
+            "updated November 13, 2026."
+        ),
+        [],
+    ),
+]
 
 
 def software_html():
     """The "Get the software" reference section (EchoLink, AllStarLink,
-    and digital voice)."""
+    digital voice, and radio programming software)."""
 
     def item_html(item, section):
         before, link_text, href, after = item
@@ -1976,6 +2542,30 @@ def software_html():
     for item in SOFTWARE_DIGITAL_VOICE:
         parts.append(item_html(item, "Digital voice"))
     parts.append("        </ul>")
+    # Radio programming software: one h3 subsection, one h4 per program,
+    # prose plus a link list per program. The subsection shares the
+    # section's single Listen button; no second button is added.
+    parts.append(
+        '        <h3 class="readable" data-section="Radio Programming Software Options">Radio Programming Software Options</h3>'
+    )
+    parts.append(
+        '        <p class="readable" data-section="Radio Programming Software Options">%s</p>'
+        % esc(PROGRAMMING_INTRO)
+    )
+    for name, prose, links in PROGRAMMING_ENTRIES:
+        parts.append(
+            '        <h4 class="readable" data-section="Radio Programming Software Options">%s</h4>'
+            % esc(name)
+        )
+        parts.append(
+            '        <p class="readable" data-section="Radio Programming Software Options">%s</p>'
+            % esc(prose)
+        )
+        if links:
+            parts.append("        <ul>")
+            for item in links:
+                parts.append(item_html(item, "Radio Programming Software Options"))
+            parts.append("        </ul>")
     parts.append("      </section>")
     return "\n".join(parts)
 
@@ -1991,16 +2581,22 @@ def build_page(lessons, quizzes):
     )
     out.append('    <meta name="color-scheme" content="dark" />')
     out.append('    <link rel="icon" href="data:," />')
-    # Apply a stored light/dark choice and a stored text size before
-    # first paint, so the page never flashes the wrong theme or size.
-    # Same pattern as the grid locator. A stored size is only trusted
+    # Apply stored display choices before first paint, so the page
+    # never flashes the wrong theme, colors, font, or size. Same
+    # pattern as the grid locator. A stored size is only trusted
     # if it is one of the button steps (16..40 in 4px steps).
     out.append(
         '    <script>try{var t=localStorage.getItem("technician-class-theme");'
         'if(t==="light"||t==="dark"){document.documentElement.setAttribute'
-        '("data-theme",t);}var s=parseInt(localStorage.getItem'
-        '("technician-class-text-size"),10);if(!isNaN(s)&&s>=16&&s<=40&&'
-        's%4===0){document.documentElement.style.fontSize=s+"px";}}catch(e){}</script>'
+        '("data-theme",t);}var c=localStorage.getItem("technician-class-colors");'
+        'if(c){document.documentElement.setAttribute("data-colors",c);}var f='
+        'localStorage.getItem("technician-class-font");if(f==="serif"||f==="mono")'
+        '{document.documentElement.setAttribute("data-font",f);}var a=localStorage.'
+        'getItem("technician-class-font-attr");if(a==="bold"||a==="italic"||'
+        'a==="bold-italic"){document.documentElement.setAttribute("data-font-attr",a);}'
+        'var s=parseInt(localStorage.getItem("technician-class-text-size"),10);'
+        'if(!isNaN(s)&&s>=16&&s<=40&&s%4===0){document.documentElement.style.'
+        'fontSize=s+"px";}}catch(e){}</script>'
     )
     out.append("    <title>Technician License Class</title>")
     out.append("    <style>" + CSS + "    </style>")
@@ -2012,28 +2608,114 @@ def build_page(lessons, quizzes):
     out.append('    <header class="wrap">')
     out.append("      <h1>Technician License Class</h1>")
     out.append(
-        '      <p><button type="button" class="theme-toggle" id="theme-toggle">'
-        "Switch to light mode</button> "
-        '<button type="button" class="theme-toggle" id="text-smaller">'
-        "Smaller text</button> "
-        '<button type="button" class="theme-toggle" id="text-larger">'
-        "Larger text</button> "
-        '<button type="button" class="theme-toggle" id="text-reset">'
-        "Reset text size</button></p>"
+        '      <button type="button" class="acc-btn" id="accessibility-toggle" '
+        'aria-expanded="false" aria-controls="accessibility-panel" '
+        'aria-label="aA Accessibility settings">'
+        '<span class="aa-symbol" aria-hidden="true">'
+        '<span class="aa-small">a</span><span class="aa-big">A</span></span>'
+        ' <span class="acc-label">Accessibility</span></button>'
+    )
+    out.append('      <div class="acc-panel" id="accessibility-panel" hidden>')
+    out.append("        <h2>Accessibility settings</h2>")
+    out.append("        <fieldset>")
+    out.append("          <legend>One-tap setup</legend>")
+    out.append(
+        '          <p class="acc-hint">Sets yellow on black, bold letters, '
+        "and text size 32 (or keeps your size if it is already larger).</p>"
     )
     out.append(
-        '      <p class="sr-only" id="text-size-status" aria-live="polite"></p>'
+        '          <button type="button" class="acc-size-btn" id="low-vision-btn">'
+        "Low Vision</button>"
+    )
+    out.append("        </fieldset>")
+    out.append("        <fieldset>")
+    out.append("          <legend>Light or dark</legend>")
+    out.append(
+        '          <label><input type="radio" name="acc-theme" value="light" /> '
+        "Light</label>"
     )
     out.append(
-        '      <p class="theme-note">Your light or dark choice is saved on '
-        "this device only. It is never sent anywhere.</p>"
+        '          <label><input type="radio" name="acc-theme" value="dark" /> '
+        "Dark</label>"
+    )
+    out.append("        </fieldset>")
+    out.append("        <fieldset>")
+    out.append("          <legend>Font</legend>")
+    out.append(
+        '          <label><input type="radio" name="acc-font" value="sans" /> '
+        "Sans-serif</label>"
     )
     out.append(
-        '      <p class="theme-note">Your text size choice is saved on '
-        "this device only. It is never sent anywhere.</p>"
+        '          <label><input type="radio" name="acc-font" value="serif" /> '
+        "Serif</label>"
     )
+    out.append(
+        '          <label><input type="radio" name="acc-font" value="mono" /> '
+        "Monospace</label>"
+    )
+    out.append("        </fieldset>")
+    out.append("        <fieldset>")
+    out.append("          <legend>Text size</legend>")
+    out.append('          <div class="acc-row">')
+    out.append(
+        '            <button type="button" class="acc-size-btn" id="text-smaller">'
+        "Smaller text</button>"
+    )
+    out.append(
+        '            <button type="button" class="acc-size-btn" id="text-larger">'
+        "Larger text</button>"
+    )
+    out.append(
+        '            <button type="button" class="acc-size-btn" id="text-reset">'
+        "Reset text size</button>"
+    )
+    out.append("          </div>")
+    out.append(
+        '          <p class="acc-readout" id="text-size-status" aria-live="polite">'
+        "Text size 20 pixels</p>"
+    )
+    out.append("        </fieldset>")
+    out.append("        <fieldset>")
+    out.append("          <legend>Font style</legend>")
+    out.append(
+        '          <label><input type="radio" name="acc-attr" value="regular" /> '
+        "Regular</label>"
+    )
+    out.append(
+        '          <label><input type="radio" name="acc-attr" value="bold" /> '
+        "Bold</label>"
+    )
+    out.append(
+        '          <label><input type="radio" name="acc-attr" value="italic" /> '
+        "Italic</label>"
+    )
+    out.append(
+        '          <label><input type="radio" name="acc-attr" value="bold-italic" /> '
+        "Bold italic</label>"
+    )
+    out.append("        </fieldset>")
+    out.append("        <fieldset>")
+    out.append("          <legend>Colors</legend>")
+    out.append('          <div class="acc-row">')
+    for value, label in PRESET_BUTTONS:
+        out.append(
+            '            <button type="button" class="acc-preset" data-colors="%s" '
+            'aria-pressed="false"><span class="acc-check" aria-hidden="true">'
+            '<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" '
+            'width="24" height="24"><path d="M20 6L9 17l-5-5" fill="none" '
+            'stroke="currentColor" stroke-width="3" stroke-linecap="round" '
+            'stroke-linejoin="round" /></svg></span>%s</button>' % (value, label)
+        )
+    out.append("          </div>")
+    out.append("        </fieldset>")
+    out.append("      </div>")
     for para in intro_paragraphs(len(lessons)):
         out.append('      <p class="intro">%s</p>' % esc(para))
+    out.append(
+        '      <p class="theme-note">Your light or dark choice, your colors, '
+        "your font, and your text size are saved on this device only. "
+        "They are never sent anywhere.</p>"
+    )
     out.append(
         '      <a class="back-link" href="%s">Back to Visually Inconvenienced Hams on Facebook</a>'
         % GROUP_URL
@@ -2520,7 +3202,7 @@ def verify_page(path, lessons, quizzes):
     check("scroll-padding-top: 10rem" in page, "scroll-padding-top 10rem missing")
     check("scroll-padding-top: 22rem" in page, "scroll-padding-top 22rem missing")
 
-    # "Get the software" reference section: present, linked, all 11 links.
+    # "Get the software" reference section: present, linked, all 19 links.
     check('id="get-the-software"' in page, "software section missing")
     check(
         page.count('data-read="get-the-software"') == 1,
