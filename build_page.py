@@ -508,7 +508,10 @@ CSS = """
   --hairline: #888888;
 }
 * { box-sizing: border-box; }
-html { font-size: 20px; scroll-padding-top: 10rem; }
+/* The root size is in rem so it follows the reader's own browser text
+   size: 1.25rem is 20px at the usual 16px browser default. The
+   text-size buttons set an inline pixel size on top of this. */
+html { font-size: 1.25rem; scroll-padding-top: 10rem; }
 
 /* Anchor jumps (contents links, next-lesson links) must clear the sticky
    Reading controls bar pinned to the top of the viewport: without this
@@ -525,6 +528,10 @@ body {
   font-family: Verdana, Geneva, "Segoe UI", Tahoma, sans-serif;
   line-height: 1.5;
   padding: 1rem;
+  /* Long words and URLs (webapp.echolink.org, "Omnidirectional:") must
+     be allowed to break, or at large text sizes on a narrow phone they
+     push the page wider than the screen and it scrolls sideways. */
+  overflow-wrap: break-word;
 }
 .wrap { max-width: 46rem; margin: 0 auto; }
 
@@ -568,6 +575,7 @@ li { margin: 0.35rem 0; }
   cursor: pointer;
 }
 .theme-toggle:hover { background: var(--panel-hover); }
+.theme-toggle[disabled] { opacity: 0.5; cursor: default; }
 .theme-note { font-size: 1.05rem; color: var(--muted); }
 
 .back-link {
@@ -1357,6 +1365,99 @@ JS = """
       });
     }
   }
+
+  // ---- Text size ---------------------------------------------------------
+  // Three buttons change the root font size in 4px steps, from 16px to
+  // 40px (default 20px). Nearly all text on the page is sized in rem,
+  // so it all follows the root size. The choice is remembered on this
+  // device only, and the head script applies a stored size before
+  // first paint, so the page never flashes the wrong size.
+  var TEXT_SIZE_MIN = 16;
+  var TEXT_SIZE_MAX = 40;
+  var TEXT_SIZE_STEP = 4;
+  var TEXT_SIZE_DEFAULT = 20;
+  var TEXT_SIZE_KEY = "technician-class-text-size";
+
+  function currentTextSize() {
+    /* The head script already applied a stored size as an inline style,
+     * so the inline style is the size in use; without one, the page is
+     * at its default. */
+    if (typeof document !== "undefined" && document.documentElement) {
+      var inline = document.documentElement.style.fontSize;
+      if (inline) {
+        var size = parseInt(inline, 10);
+        if (!isNaN(size)) return size;
+      }
+    }
+    return TEXT_SIZE_DEFAULT;
+  }
+
+  function updateTextSizeButtons(size) {
+    var smaller = document.getElementById("text-smaller");
+    var larger = document.getElementById("text-larger");
+    if (smaller) smaller.disabled = (size <= TEXT_SIZE_MIN);
+    if (larger) larger.disabled = (size >= TEXT_SIZE_MAX);
+  }
+
+  function announceTextSize(size) {
+    var status = document.getElementById("text-size-status");
+    if (status) status.textContent = "Text size " + size + " pixels";
+  }
+
+  function applyTextSize(size, remember) {
+    if (typeof document !== "undefined" && document.documentElement) {
+      document.documentElement.style.fontSize = size + "px";
+    }
+    updateTextSizeButtons(size);
+    announceTextSize(size);
+    if (remember) {
+      try {
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem(TEXT_SIZE_KEY, String(size));
+        }
+      } catch (e) { /* private mode: the choice just is not remembered */ }
+    }
+  }
+
+  function resetTextSize() {
+    /* Back to the page default: drop the inline size so the stylesheet
+     * value applies again, and forget the stored choice. */
+    if (typeof document !== "undefined" && document.documentElement) {
+      document.documentElement.style.fontSize = "";
+    }
+    try {
+      if (typeof localStorage !== "undefined") {
+        localStorage.removeItem(TEXT_SIZE_KEY);
+      }
+    } catch (e) { /* private mode: nothing was stored anyway */ }
+    updateTextSizeButtons(TEXT_SIZE_DEFAULT);
+    announceTextSize(TEXT_SIZE_DEFAULT);
+  }
+
+  /* Text-size buttons: mark the disabled end for the size in use. */
+  updateTextSizeButtons(currentTextSize());
+  var smallerBtn = document.getElementById("text-smaller");
+  if (smallerBtn) {
+    smallerBtn.addEventListener("click", function () {
+      var size = currentTextSize() - TEXT_SIZE_STEP;
+      if (size < TEXT_SIZE_MIN) size = TEXT_SIZE_MIN;
+      applyTextSize(size, true);
+    });
+  }
+  var largerBtn = document.getElementById("text-larger");
+  if (largerBtn) {
+    largerBtn.addEventListener("click", function () {
+      var size = currentTextSize() + TEXT_SIZE_STEP;
+      if (size > TEXT_SIZE_MAX) size = TEXT_SIZE_MAX;
+      applyTextSize(size, true);
+    });
+  }
+  var resetBtn = document.getElementById("text-reset");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+      resetTextSize();
+    });
+  }
 })();
 """
 
@@ -1890,12 +1991,16 @@ def build_page(lessons, quizzes):
     )
     out.append('    <meta name="color-scheme" content="dark" />')
     out.append('    <link rel="icon" href="data:," />')
-    # Apply a stored light/dark choice before first paint, so the page
-    # never flashes the wrong theme. Same pattern as the grid locator.
+    # Apply a stored light/dark choice and a stored text size before
+    # first paint, so the page never flashes the wrong theme or size.
+    # Same pattern as the grid locator. A stored size is only trusted
+    # if it is one of the button steps (16..40 in 4px steps).
     out.append(
         '    <script>try{var t=localStorage.getItem("technician-class-theme");'
         'if(t==="light"||t==="dark"){document.documentElement.setAttribute'
-        '("data-theme",t);}}catch(e){}</script>'
+        '("data-theme",t);}var s=parseInt(localStorage.getItem'
+        '("technician-class-text-size"),10);if(!isNaN(s)&&s>=16&&s<=40&&'
+        's%4===0){document.documentElement.style.fontSize=s+"px";}}catch(e){}</script>'
     )
     out.append("    <title>Technician License Class</title>")
     out.append("    <style>" + CSS + "    </style>")
@@ -1908,10 +2013,23 @@ def build_page(lessons, quizzes):
     out.append("      <h1>Technician License Class</h1>")
     out.append(
         '      <p><button type="button" class="theme-toggle" id="theme-toggle">'
-        "Switch to light mode</button></p>"
+        "Switch to light mode</button> "
+        '<button type="button" class="theme-toggle" id="text-smaller">'
+        "Smaller text</button> "
+        '<button type="button" class="theme-toggle" id="text-larger">'
+        "Larger text</button> "
+        '<button type="button" class="theme-toggle" id="text-reset">'
+        "Reset text size</button></p>"
+    )
+    out.append(
+        '      <p class="sr-only" id="text-size-status" aria-live="polite"></p>'
     )
     out.append(
         '      <p class="theme-note">Your light or dark choice is saved on '
+        "this device only. It is never sent anywhere.</p>"
+    )
+    out.append(
+        '      <p class="theme-note">Your text size choice is saved on '
         "this device only. It is never sent anywhere.</p>"
     )
     for para in intro_paragraphs(len(lessons)):
